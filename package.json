@@ -1,0 +1,26 @@
+{
+  "name": "james-plier-sdc",
+  "version": "1.0.0",
+  "description": "SDC",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-Ariel/James-Plier-SDC.git"
+  },
+  "author": "James Plier",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-Ariel/James-Plier-SDC/issues"
+  },
+  "homepage": "https://github.com/Team-Ariel/James-Plier-SDC#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jest": "^27.3.1",
+    "mongodb": "^4.1.4",
+    "mysql": "^2.18.1",
+    "postgres": "^1.0.2"
+  }
+}
