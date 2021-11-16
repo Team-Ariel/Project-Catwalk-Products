@@ -9,10 +9,9 @@ const postgresRole = 'jamesplier';
 const pool = new Pool({
   user: postgresRole,
   host: 'localhost',
-  database: 'SDCOverview'
+  database: 'SDCOverview',
   password: '',
   port: '5432',
-
 })
 
 const schemaCodes = {
@@ -25,28 +24,25 @@ const schemaCodes = {
 };
 
 // SELECT all of the postgres databases schema names
-async function schemaFuncs() {
+ function schemaFuncs() {
   let selectSchemasSql = 'SELECT schema_name FROM information_schema.schemata;'
-  await Pool.query(selectSchemasSql, (err, res) => {
-    console.log('\nselectSchemasSql:', selectSchemasSql)
-   // log errors
-    if (err) {
-      console.log("SELECT schema_name:", schemaCodes[err.code])
-      console.log("ERROR code:", err.code)
-    }
-
-    else if (res.rows !== undefined) {
-      res.rows.forEach(row => {
+    pool.query(selectSchemasSql)
+    .then((result) => {
+    if (result.rows !== undefined) {
+      result.rows.forEach(row => {
         pgSchemas.push(row.schema_name)
       })
       console.log("schema names:", pgSchemas)
-      console.log("SELECT schema_name total schemas:", res.rowCount);
+      console.log("SELECT schema_name total schemas:", result.rowCount);
     }
 
     let createSql = `CREATE SCHEMA IF NOT EXISTS ${overviewSchema} AUTHORIZATION ${postgresRole};`
 
     console.log('\ncreateSql:', createSql)
-    await pool.query(createSql, (createErr, createRes) => {
+
+
+
+   pool.query(createSql, (createErr, createRes) => {
       if (createErr) {
         console.log("CREATE SCHEMA ERROR:", createErr.code, "--", schemaCodes[createErr.code])
         console.log("ERROR code:", createErr.code)
@@ -55,65 +51,139 @@ async function schemaFuncs() {
       if (createRes) {
         console.log("\nCREATE SCHEMA RESULT", createRes.command)
 
-        let createProductsTable = `CREATE TABLE ${overviewSchema}.product(
-          product_id INT GENERATED ALWAYS AS IDENTITY,
+        let createProductsTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.product(
+          id INT GENERATED ALWAYS AS IDENTITY,
+          slogan VARCHAR(255),
           description VARCHAR (255),
-          name VARCHAR (50)
-          category VARCHAR (255)
-          default_price VARCHAR(255)
-          PRIMARY KEY(product_id)
+          name VARCHAR (50),
+          category VARCHAR (255),
+          default_price VARCHAR(255),
+          PRIMARY KEY(id)
         );`
 
-        let createFeaturesJoinTable = `CREATE TABLE ${overviewSchema}.features(
-          feature_id INT GENERATED ALWAYS AS IDENTITY
-          product_id INT
-          FOREIGN KEY(product_id)
-            REFERENCES product(product_id)
+        let createFeaturesJoinTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.features(
+          feature_id INT GENERATED ALWAYS AS IDENTITY,
+          id INT,
+          PRIMARY KEY(feature_id),
+          FOREIGN KEY(id)
+            REFERENCES myschema.product(id)
         );`
 
-        let createFeatureTable = `CREATE TABLE ${overviewSchema}.feature(
-          value INT
-          feature VARCHAR(255)
-          feature_id INT
+        let createFeatureTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.feature(
+          value INT,
+          feature VARCHAR(255),
+          feature_id INT,
           FOREIGN KEY(feature_id)
-            REFERENCES features(feature_id)
+            REFERENCES myschema.features(feature_id)
         );`
 
-        let createRelatedTable = `CREATE TABLE ${overviewSchema}.related(
-          id INT GENERATED ALWAYS AS IDENTITY
-          related_id_list INT ARRAY
-          product_id
-          FOREIGN KEY(product_id)
-            REFERENCES product(product_id)
+        let createRelatedTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.related(
+          related_id INT GENERATED ALWAYS AS IDENTITY,
+          related_id_list INT ARRAY,
+          id INT,
+          FOREIGN KEY(id)
+          REFERENCES myschema.product(id)
        );`
 
-       let createStyleTable = `CREATE TABLE ${overviewSchema}.style(
-        style_id INT GENERATED ALWAYS AS IDENTITY
-        product_id INT
-        name VARCHAR(255)
-        original_price VARCHAR(255)
-        sale_price VARCHAR(255)
-        default? BOOLEAN
-        FOREIGN KEY(product_id)
-          REFERENCES product(product_id)
+
+       let createStyleTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.styles(
+        style_id INT GENERATED ALWAYS AS IDENTITY,
+        id INT,
+        name VARCHAR(255),
+        original_price VARCHAR(255),
+        sale_price VARCHAR(255),
+        default_style BOOLEAN,
+        PRIMARY KEY(style_id),
+        FOREIGN KEY(id)
+        REFERENCES myschema.product(id)
        );`
 
-       let createSkuTable = `CREATE TABLE ${overviewSchema}.sku(
-         style_id INT
-         number JSON
+       let createSkuTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.sku(
+         style_id INT,
+         number JSON,
          FOREIGN KEY(style_id)
-           REFERENCES style(style_id)
+         REFERENCES myschema.styles(style_id)
          );`
 
-      let createPhotosTable = `CREATE TABLE ${overviewSchema}.photo(
-        style_id INT
-        thumnail_url VARCHAR(255)
-        url VARCHAR(255)
+      let createPhotosTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.photo(
+        style_id INT,
+        thumnail_url VARCHAR(255),
+        url VARCHAR(255),
         FOREIGN KEY(style_id)
-          REFERENCES style(style_id)
-      )`
+        REFERENCES myschema.styles(style_id)
+      );`
+
+      console.log("\ncreateTableSql", createProductsTable, createPhotosTable, createFeaturesJoinTable, createStyleTable, createSkuTable, createFeatureTable)
+
+      pool.query(createProductsTable, (err, res) => {
+        if (err) {
+          console.log("CREATE TABLE ERROR:", err.code, "--", schemaCodes[err.code]);
+          console.log("createTablesql:", err)
+        }
+
+        if (res) {
+          console.log("\nCREATE TABLE RESULT:", res)
+        }
+      })
+
+      pool.query(createFeaturesJoinTable, (err, res) => {
+        if (err) {
+          console.log("CREATE TABLE ERROR:", err.code, "--", schemaCodes[err.code]);
+          console.log("createTablesql:", err)
+        }
+
+        if (res) {
+          console.log("\nCREATE TABLE RESULT:", res)
+        }
+      })
+      pool.query(createFeatureTable, (err, res) => {
+        if (err) {
+          console.log("CREATE TABLE ERROR:", err.code, "--", schemaCodes[err.code]);
+          console.log("createTablesql:", err)
+        }
+
+        if (res) {
+          console.log("\nCREATE TABLE RESULT:", res)
+        }
+      })
+      pool.query(createPhotosTable, (err, res) => {
+        if (err) {
+          console.log("CREATE TABLE ERROR:", err.code, "--", schemaCodes[err.code]);
+          console.log("createTablesql:", err)
+        }
+
+        if (res) {
+          console.log("\nCREATE TABLE RESULT:", res)
+        }
+      })
+      pool.query(createStyleTable, (err, res) => {
+        if (err) {
+          console.log("CREATE TABLE ERROR:", err.code, "--", schemaCodes[err.code]);
+          console.log("createTablesql:", err)
+        }
+
+        if (res) {
+          console.log("\nCREATE TABLE RESULT:", res)
+        }
+      })
+      pool.query(createSkuTable, (err, res) => {
+        if (err) {
+          console.log("CREATE TABLE ERROR:", err.code, "--", schemaCodes[err.code]);
+          console.log("createTablesql:", err)
+        }
+
+        if (res) {
+          console.log("\nCREATE TABLE RESULT:", res)
+        }
+      })
+
+
 
       }
     })
   })
+  .catch((err) => {console.log("SELECT schema_name:", schemaCodes[err.code])
+  console.log("ERROR code:", err.code)})
 }
+
+schemaFuncs();
