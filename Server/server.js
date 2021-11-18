@@ -1,11 +1,46 @@
 const express = require('express');
+const controller = require('./controller.js');
 const app = express()
-const port = 5432
+const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-})
 
 app.listen(port, () => {
   console.log(`Listening on ${port}`)
 })
+
+
+app.get('/products', (req, res) => {
+  controller.getProductsAndFormat(req.query, (err, data) => {
+    if (err) {
+      res.status(err).send(`Error: ${err}`);
+    }
+    if (data) {
+      res.status(200).send(data);
+    }
+
+  })
+})
+
+app.get('/products/:product_id', (req, res) => {
+  controller.getSingleProductAndFeatures(req.params.product_id, (err, data) => {
+    if (err) {
+      res.status(err).send(`Error: ${err}`);
+    }
+    if (data) {
+      res.status(200).send(data);
+    }
+
+  })
+})
+
+// app.get('products/:product_id/styles', (req, res) => {
+
+// })
+
+// app.get('/products/:product_id/related', (req, res) => {
+
+// })
+
+
+
+
