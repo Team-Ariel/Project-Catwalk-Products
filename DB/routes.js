@@ -17,33 +17,38 @@ const getProducts = (params) => {
   let count = params.count
   let results = page * count
   let query = `SELECT * FROM myschema.product LIMIT ${results}`
-  pool.connect()
   return pool.query(query)
 }
 
 const getProduct = (productId) => {
-  pool.connect()
-  // return pool.query(`SELECT
-  // product.id,
-  // product.slogan,
-  // product.description,
-  // product.name,
-  // product.category,
-  // product.default_price,
-  // feature.value,
-  // feature.feature
-  // FROM myschema.product RIGHT JOIN myschema.feature ON myschema.feature.product_id=myschema.product.id WHERE myschema.product.id=${productId};`)
   return pool.query(`SELECT * FROM myschema.product WHERE id=${productId}`)
 }
 
 const getFeatures = (productId) => {
-  pool.connect()
   return pool.query(`SELECT feature.value, feature.feature FROM myschema.feature WHERE product_id=${productId}`)
 }
+
+const getStyles = (productId) => {
+  // return pool.query(`SELECT * FROM myschema.styles INNER JOIN myschema.sku ON sku.styleid=styles.style_id INNER JOIN myschema.photo ON photo.styleid=styles.style_id WHERE styles.id=${productId};`)
+  return pool.query(`SELECT * FROM myschema.styles WHERE id=${productId}`);
+}
+
+const getPhotos = (styleId) => {
+  return pool.query(`SELECT * FROM myschema.photo WHERE styleid=${styleId}`)
+}
+
+const getSkus = (styleId) => {
+  return pool.query(`SELECT * FROM myschema.sku WHERE id=${styleId}`)
+}
+
+
 
 module.exports = {
   getProducts: getProducts,
   getProduct: getProduct,
-  getFeatures: getFeatures
+  getFeatures: getFeatures,
+  getStyles: getStyles,
+  getPhotos: getPhotos,
+  getSkus: getSkus
 }
 

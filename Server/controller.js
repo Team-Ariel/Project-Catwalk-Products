@@ -1,5 +1,4 @@
 const routeMethods = require('../DB/routes.js');
-const pool = require('pg').Pool;
 
 
 
@@ -34,8 +33,48 @@ const getSingleProductAndFeatures = (productId, callback) => {
   })
 }
 
+const getStyles = (productId, callback) => {
+  routeMethods.getStyles(productId)
+  .then((result) => {
+    let rows = result.rows
+    let dataObject = {
+      product_id: productId,
+      results: []
+
+    }
+    result.rows.forEach((style, index) => {
+      routeMethods.getPhotos(style.style_id)
+      .then((result) => {
+        style.photos = result.rows;
+        routeMethods.getSkus(style.style_id)
+        .then((result) => {
+          let skus = {}
+          result.rows.forEach((sku) => {
+            skus[sku.styleid] = {
+              quantity: sku.quantity,
+              size: sku.size
+            }
+          })
+          style.skus = skus;
+          dataObject.results.push(style);
+           if (index === rows.length -1) {
+             callback(null, dataObject);
+           }
+        })
+        .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+    })
+  })
+  .catch((err) => {
+    console.log(err);
+    callback(err, null);
+  })
+}
+
 
 module.exports = {
   getProductsAndFormat: getProductsAndFormat,
-  getSingleProductAndFeatures: getSingleProductAndFeatures
+  getSingleProductAndFeatures: getSingleProductAndFeatures,
+  getStyles: getStyles
 }
