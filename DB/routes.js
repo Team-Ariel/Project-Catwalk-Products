@@ -15,7 +15,6 @@ const pool = new Pool({
 const getProducts = (params) => {
   let page = params.page
   let count = params.count
-  let results = page * count
   let query = `SELECT * FROM myschema.product LIMIT ${count} OFFSET (${page} - 1) * ${count}`
   return pool.query(query)
 }
