@@ -41,6 +41,9 @@ const getSkus = (styleId) => {
   return pool.query(`SELECT * FROM myschema.sku WHERE id=${styleId}`)
 }
 
+const getRelated = (productId) => {
+  return pool.query(`SELECT related_product_id FROM myschema.related WHERE current_product_id=${productId}`)
+}
 
 
 module.exports = {
@@ -49,6 +52,7 @@ module.exports = {
   getFeatures: getFeatures,
   getStyles: getStyles,
   getPhotos: getPhotos,
-  getSkus: getSkus
+  getSkus: getSkus,
+  getRelated: getRelated
 }
 

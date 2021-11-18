@@ -72,9 +72,24 @@ const getStyles = (productId, callback) => {
   })
 }
 
+const getRelated = (productId, callback) => {
+  routeMethods.getRelated(productId)
+  .then((result) => {
+    let data = [];
+    result.rows.forEach(related => data.push(related.related_product_id))
+    callback(null, data);
+
+  })
+  .catch((err) => {
+    console.log(err);
+    callback(err, null);
+  })
+}
+
 
 module.exports = {
   getProductsAndFormat: getProductsAndFormat,
   getSingleProductAndFeatures: getSingleProductAndFeatures,
-  getStyles: getStyles
+  getStyles: getStyles,
+  getRelated: getRelated
 }

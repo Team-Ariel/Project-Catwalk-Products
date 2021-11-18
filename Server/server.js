@@ -45,9 +45,17 @@ app.get('/products/:product_id/styles', (req, res) => {
 
 })
 
-// app.get('/products/:product_id/related', (req, res) => {
+app.get('/products/:product_id/related', (req, res) => {
+  controller.getRelated((req.params.product_id), (err, data) => {
+    if (err) {
+      res.status(err.send(`Error: ${err}`));
+    }
+    if (data) {
+      res.status(200).send(data);
+    }
+  })
 
-// })
+})
 
 
 
