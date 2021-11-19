@@ -28,17 +28,21 @@ const getFeatures = (productId) => {
 }
 
 const getStyles = (productId) => {
-  // return pool.query(`SELECT * FROM myschema.styles INNER JOIN myschema.sku ON sku.styleid=styles.style_id INNER JOIN myschema.photo ON photo.styleid=styles.style_id WHERE styles.id=${productId};`)
-  return pool.query(`SELECT * FROM myschema.styles WHERE id=${productId}`);
+  return pool.query(`SELECT row_to_json(style) AS styles
+  FROM (
+    SELECT a.style_id,
+    a.name,
+    (SELECT json_agg(photo)
+      FROM (
+      SELECT * FROM myschema.photo WHERE photo.styleId=a.style_id)
+    photo) AS photos,
+    (SELECT json_agg(sku) FROM (
+      SELECT * FROM myschema.sku WHERE sku.styleId=a.style_id)
+      sku)
+    AS skus FROM myschema.styles AS a)
+    style WHERE style_id=1;`);
 }
 
-const getPhotos = (styleId) => {
-  return pool.query(`SELECT * FROM myschema.photo WHERE styleid=${styleId}`)
-}
-
-const getSkus = (styleId) => {
-  return pool.query(`SELECT * FROM myschema.sku WHERE id=${styleId}`)
-}
 
 const getRelated = (productId) => {
   return pool.query(`SELECT related_product_id FROM myschema.related WHERE current_product_id=${productId}`)
@@ -50,8 +54,6 @@ module.exports = {
   getProduct: getProduct,
   getFeatures: getFeatures,
   getStyles: getStyles,
-  getPhotos: getPhotos,
-  getSkus: getSkus,
   getRelated: getRelated
 }
 

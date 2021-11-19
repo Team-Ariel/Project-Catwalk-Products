@@ -105,3 +105,6 @@ dist
 
 #ignore config file
 Server/config.js
+
+#ignore CSV Files
+
