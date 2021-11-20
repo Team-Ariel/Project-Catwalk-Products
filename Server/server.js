@@ -24,7 +24,8 @@ app.get('/products', (req, res) => {
 app.get('/products/:product_id', (req, res) => {
   controller.getSingleProductAndFeatures(req.params.product_id, (err, data) => {
     if (err) {
-      res.status(err).send(`Error: ${err}`);
+      console.log(err);
+      res.status(404).send(`Error: ${err}`);
     }
     if (data) {
       res.status(200).send(data);
@@ -36,7 +37,7 @@ app.get('/products/:product_id', (req, res) => {
 app.get('/products/:product_id/styles', (req, res) => {
   controller.getStyles((req.params.product_id), (err, data) => {
     if (err) {
-      res.status(err.send(`Error: ${err}`));
+      res.status(err).send(`Error: ${err}`);
     }
     if (data) {
       res.status(200).send(data);
