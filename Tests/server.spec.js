@@ -58,7 +58,7 @@ describe('/products endpoint', () => {
   }
 
   it('Should return results based on count parameter', async () => {
-    counts = [5, 2, 3, 0, 2];
+    let counts = [5, 2, 3, 0, 2];
     let request0 = request(counts[0])
     let request1 = request(counts[1])
     let request2 = request(counts[2])
@@ -74,9 +74,30 @@ describe('/products endpoint', () => {
       expect(values[4].body.length).toBe(2);
 
       })
+  })
+
+  it('Should return results based on page parameter', () => {
+    let pages = [1, 2, 4, 1000, 1349];
+    let request0 = request(count, pages[0])
+    let request1 = request(count, pages[1])
+    let request2 = request(count, pages[2])
+    let request3 = request(count, pages[3])
+    let request4 = request(count, pages[4])
+
+    return Promise.all([request0, request1, request2, request3, request4])
+    .then((values => {
+      expect(values[0].body[0].id).toEqual(1)
+      expect(values[1].body[0].id).toEqual(5)
+      expect(values[2].body[0].id).toEqual(13)
+      expect(values[3].body[0].id).toEqual(3997)
+      expect(values[4].body[0].id).toEqual(5393)
+
+    }))
 
 
   })
+
+
   it('Should resolve in under 2000ms', () => {
     const start = Date.now()
     return request(5, 200000)
