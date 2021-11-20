@@ -20,11 +20,8 @@ const getProducts = (params) => {
 }
 
 const getProduct = (productId) => {
-  return pool.query(`SELECT * FROM myschema.product WHERE id=${productId}`)
-}
-
-const getFeatures = (productId) => {
-  return pool.query(`SELECT feature.value, feature.feature FROM myschema.feature WHERE product_id=${productId}`)
+  // return pool.query(`SELECT * FROM myschema.product WHERE id=${productId}`)
+  return pool.query(`SELECT row_to_json(product) FROM (SELECT a.id, a.name, a.slogan, a.description, a.category, a.default_price, (SELECT json_agg(features) FROM (SELECT b.feature feature, b.value value FROM myschema.features b WHERE b.product_id = a.id) features) AS features From myschema.product AS a) product WHERE id=${productId};`)
 }
 
 const getStyles = (productId) => {
@@ -55,7 +52,6 @@ const getRelated = (productId) => {
 module.exports = {
   getProducts: getProducts,
   getProduct: getProduct,
-  getFeatures: getFeatures,
   getStyles: getStyles,
   getRelated: getRelated
 }

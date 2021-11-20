@@ -21,16 +21,7 @@ const getSingleProductAndFeatures = (productId, callback) => {
        callback('No matching product', null);
        return;
      }
-     routeMethods.getFeatures(productId)
-     .then((result) => {
-
-         response.features = result.rows;
-
-       callback(null, response);
-     })
-     .catch((err) => {
-       callback(err, null);
-     })
+     callback(null, response);
   })
   .catch((err) => {
     callback(err, null);
