@@ -89,11 +89,43 @@ describe('/products endpoint', () => {
 })
 
 describe('/products/id/styles endpoint', () => {
-  let id = 1;
+  let id = 1000000;
   let path = `http://127.0.0.1:3000/products/${id}/styles`
   var request = (url) => {
     return agent.get(url)
   }
+
+  it('Should return results in the correct format', () => {
+    return request(path)
+    .then((result) => {
+      expect(result.body).toEqual(expect.objectContaining({
+        results: expect.any(Object),
+        product_id: expect.any(String)
+      }))
+      expect(result.body.results).toEqual(expect.objectContaining({
+        style_id: expect.any(Number),
+        name: expect.any(String),
+        photos: expect.any(Array),
+        skus: expect.any(Object)
+      }))
+      if(result.body.results.photos.length > 0) {
+        result.body.results.photos.forEach(photo => {
+          expect(photo).toEqual(expect.objectContaining({
+            url: expect.any(String),
+            thumbnail_url: expect.any(String)
+          }))
+        })
+      }
+      for (let key in result.body.results.skus) {
+        expect(result.body.results.skus[key]).toEqual(expect.objectContaining({
+          quantity: expect.any(Number),
+          size: expect.any(String)
+        }))
+      }
+
+    })
+  })
+
 
   it('Should resolve in under 2000ms', () => {
     const start = Date.now()
