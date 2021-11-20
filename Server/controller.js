@@ -40,7 +40,8 @@ const getSingleProductAndFeatures = (productId, callback) => {
 const getStyles = (productId, callback) => {
   routeMethods.getStyles(productId)
   .then((result) => {
-    callback(null, result.rows)
+    result.rows[0].product_id = productId
+    callback(null, result.rows[0])
   })
   .catch((err) => {
     callback(err, null);

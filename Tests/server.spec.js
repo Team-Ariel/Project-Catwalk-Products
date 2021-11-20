@@ -33,11 +33,18 @@ describe('/products/:product endpoint', () => {
       expect(response).toBe(undefined);
     })
     .catch((err) => {
-      console.log(err);
-      expect(err).toBeDefined();
-
-
-
+     expect(err).toBeDefined();
+    })
+  })
+  it('Should resolve in under 2000ms', () => {
+    const start = Date.now()
+    id = 1000000;
+    path = `http://127.0.0.1:3000/products/${id}`
+    return request(path)
+    .then((response) => {
+      const duration = Date.now() - start
+      console.log(`executed query in ${duration}`)
+      expect(duration).toBeLessThanOrEqual(2000)
     })
   })
   })
@@ -46,7 +53,7 @@ describe('/products endpoint', () => {
   let page = 2;
   let count = 4;
 
-  let request = (count) => {
+  let request = (count, page = 1) => {
     return agent.get(`http://127.0.0.1:3000/products/?count=${count}&page=${page}`)
   }
 
@@ -70,5 +77,33 @@ describe('/products endpoint', () => {
 
 
   })
+  it('Should resolve in under 2000ms', () => {
+    const start = Date.now()
+    return request(5, 200000)
+    .then((response) => {
+      const duration = Date.now() - start
+      console.log(`executed query in ${duration} milliseconds`)
+      expect(duration).toBeLessThanOrEqual(2000)
+    })
+  })
+})
+
+describe('/products/id/styles endpoint', () => {
+  let id = 1;
+  let path = `http://127.0.0.1:3000/products/${id}/styles`
+  var request = (url) => {
+    return agent.get(url)
+  }
+
+  it('Should resolve in under 2000ms', () => {
+    const start = Date.now()
+    return request(path)
+    .then((result) => {
+      const duration = Date.now() - start
+      console.log(`executed query in ${duration} milliseconds`)
+      expect(Date.now() - start).toBeLessThanOrEqual(2000);
+    })
+  })
+
 })
 
