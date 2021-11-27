@@ -43,7 +43,7 @@ describe('/products/:product endpoint', () => {
     return request(path)
     .then((response) => {
       const duration = Date.now() - start
-      console.log(`executed query in ${duration}`)
+      console.log(`executed query in ${duration} milliseconds`)
       expect(duration).toBeLessThanOrEqual(2000)
     })
   })

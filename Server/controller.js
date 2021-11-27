@@ -24,7 +24,7 @@ const getSingleProductAndFeatures = (productId, callback) => {
      callback(null, response);
   })
   .catch((err) => {
-    callback(err, null);
+     callback(err, null);
   })
 }
 
@@ -49,7 +49,7 @@ const getRelated = (productId, callback) => {
 
   })
   .catch((err) => {
-    console.log(err);
+    console.log('line 52', err);
     callback(err, null);
   })
 }
