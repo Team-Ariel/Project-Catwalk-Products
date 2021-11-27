@@ -15,16 +15,15 @@ const pool = new Pool({
 const getProducts = (params) => {
   let page = params.page
   let count = params.count
-  let query = `SELECT * FROM myschema.product ORDER BY id LIMIT ${count} OFFSET (${page} - 1) * ${count} `
+  let offset = ((page - 1) * count)
+  let totalMax = (page + 1) * count;
+  let query = `SELECT p.id, p.name, p.slogan, p.description, p.category, p.default_price FROM myschema.product AS p WHERE p.id < ${totalMax} and p.id > ${offset} ORDER BY id LIMIT ${count} `
   return pool.query(query)
 }
 
 const getProduct = (productId) => {
-  return pool.query(`SELECT * FROM myschema.product WHERE id=${productId}`)
-}
-
-const getFeatures = (productId) => {
-  return pool.query(`SELECT feature.value, feature.feature FROM myschema.feature WHERE product_id=${productId}`)
+  // return pool.query(`SELECT * FROM myschema.product WHERE id=${productId}`)
+  return pool.query(`SELECT a.id, a.name, a.slogan, a.description, a.category, a.default_price, (SELECT json_agg(features) FROM (SELECT b.feature feature, b.value value FROM myschema.features b WHERE b.product_id = a.id) features) AS features From myschema.product AS a WHERE id=${productId};`)
 }
 
 const getStyles = (productId) => {
@@ -43,7 +42,7 @@ const getStyles = (productId) => {
    ) skus
    FROM myschema.sku s WHERE s.styleId=a.style_id)
    FROM myschema.styles AS a)
-    style WHERE style_id=1;`);
+    style WHERE style_id=${productId};`);
 }
 
 
@@ -55,7 +54,6 @@ const getRelated = (productId) => {
 module.exports = {
   getProducts: getProducts,
   getProduct: getProduct,
-  getFeatures: getFeatures,
   getStyles: getStyles,
   getRelated: getRelated
 }

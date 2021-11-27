@@ -98,10 +98,12 @@ const schemaCodes = {
         REFERENCES myschema.product(id)
        );`
 
-       let createSkuTable = `CREATE TABLE IF NOT EXISTS ${overviewSchema}.sku(
-         style_id INT,
-         number JSON,
-         FOREIGN KEY(style_id)
+       let createSkuTable = `CREATE TABLE IF NOT EXISTS sku(
+         id INT, 
+         styleId INT,
+         size VARCHAR(50),
+         quantity int,
+         FOREIGN KEY(styleId)
          REFERENCES myschema.styles(style_id)
          );`
 

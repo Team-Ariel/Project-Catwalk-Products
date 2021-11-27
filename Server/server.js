@@ -2,6 +2,7 @@ const express = require('express');
 const controller = require('./controller.js');
 const app = express()
 const port = 3000
+const db = require('../DB/routes.js')
 
 
 app.listen(port, () => {
@@ -24,7 +25,6 @@ app.get('/products', (req, res) => {
 app.get('/products/:product_id', (req, res) => {
   controller.getSingleProductAndFeatures(req.params.product_id, (err, data) => {
     if (err) {
-      console.log(err);
       res.status(404).send(`Error: ${err}`);
     }
     if (data) {

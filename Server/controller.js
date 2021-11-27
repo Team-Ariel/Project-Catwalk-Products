@@ -21,19 +21,10 @@ const getSingleProductAndFeatures = (productId, callback) => {
        callback('No matching product', null);
        return;
      }
-     routeMethods.getFeatures(productId)
-     .then((result) => {
-
-         response.features = result.rows;
-
-       callback(null, response);
-     })
-     .catch((err) => {
-       callback(err, null);
-     })
+     callback(null, response);
   })
   .catch((err) => {
-    callback(err, null);
+     callback(err, null);
   })
 }
 
@@ -58,7 +49,7 @@ const getRelated = (productId, callback) => {
 
   })
   .catch((err) => {
-    console.log(err);
+    console.log('line 52', err);
     callback(err, null);
   })
 }
