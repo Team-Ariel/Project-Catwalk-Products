@@ -75,4 +75,4 @@ app.get('/products/:product_id/related', (req, res) => {
 
 })
 
-app.get('loaderio-7bf4d5f38ce86532dc53d085672f654b.txt', (req, res) => res.send('/loaderio-7bf4d5f38ce86532dc53d085672f654b'))
+app.get('/loaderio-7bf4d5f38ce86532dc53d085672f654b.txt', (req, res) => res.send('loaderio-7bf4d5f38ce86532dc53d085672f654b'))
