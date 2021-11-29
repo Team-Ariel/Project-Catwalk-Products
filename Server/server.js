@@ -1,13 +1,30 @@
 const express = require('express');
 const controller = require('./controller.js');
 const app = express()
-const port = 3000
+const port = 3000;
 const db = require('../DB/routes.js')
+const cluster = require('cluster');
+
+const numCPUs = require('os').cpus().length;
+
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
+} else {
+  app.listen(port, err => {
+    err ?
+    console.log("error in server setup") :
+    console.log(`Worker ${process.pid} started`);
+  })
+}
 
 
-app.listen(port, () => {
-  console.log(`Listening on ${port}`)
-})
 
 
 app.get('/products', (req, res) => {
