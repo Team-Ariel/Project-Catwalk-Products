@@ -10,6 +10,14 @@ const pool = new Pool({
   port: 5432,
 })
 
+// const pool = new Pool({
+//   user: postgresRole,
+//   host: '127.0.0.1',
+//   database: 'sdcoverview',
+//   password: '',
+//   port: 3000,
+// })
+
 
 
 const getProducts = (params) => {

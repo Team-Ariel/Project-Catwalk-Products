@@ -4,7 +4,7 @@
   "description": "SDC",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./Server/server.js",
+    "start": "nodemon ./Server/server.js & nodemon ./Server2/server2.js",
     "test": "jest",
     "test:watch": "npm run test -- --watch"
   },
