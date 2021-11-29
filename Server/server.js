@@ -58,6 +58,4 @@ app.get('/products/:product_id/related', (req, res) => {
 
 })
 
-
-
-
+app.get('/loaderio-9fa3024019b84de063f423e7625ca8ba.txt', (req, res) => res.download('./Server/public/loaderio-9fa3024019b84de063f423e7625ca8ba.txt'))
