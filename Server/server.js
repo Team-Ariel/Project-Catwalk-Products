@@ -1,7 +1,7 @@
 const express = require('express');
 const controller = require('./controller.js');
 const app = express()
-const port = 3002;
+const port = 3000;
 const db = require('../DB/routes.js')
 const cluster = require('cluster');
 
@@ -28,7 +28,6 @@ if (cluster.isMaster) {
 
 
 app.get('/products', (req, res) => {
-  console.log(req.query);
   controller.getProductsAndFormat(req.query, (err, data) => {
     if (err) {
       res.status(err).send(`Error: ${err}`);
