@@ -38,7 +38,7 @@ const getStyles = (productId) => {
   return pool.query(`SELECT row_to_json(style) AS results
   FROM (
     SELECT a.style_id,
-    a.name, a.sale_price, a.original_price, a."default\?"
+    a.name, a.sale_price, a.original_price, a."default?",
     (SELECT json_agg(photo)
       FROM (
       SELECT photo.url, photo.thumbnail_url FROM myschema.photo WHERE photo.styleId=a.style_id)
