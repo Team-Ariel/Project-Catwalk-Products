@@ -7,28 +7,28 @@ const servers = [
   'http://localhost:3001'
 ]
 
-let currentServer = 1;
+let currentServer = 0;
 
 
 app.get('*', (req, res) => {
   let params = {
+    url: `${servers[currentServer]}${req.url}`,
     method: 'get',
     headers: req.headers,
     data: req.body,
-
   }
   if (currentServer === 1) {
-    axios(`${servers[1]}`, params)
+    axios(params)
     .then((results) => {
       currentServer = 0;
-      res.status(200).send(results);
+      res.status(200).send(results.data);
     })
     .catch((err) => res.status(404).send(err))
   } else {
-    axios(`${servers[0]}`, params)
+    axios(params)
     .then((results) => {
       currentServer = 1;
-      res.status(200).send(results);
+      res.status(200).send(results.data);
     })
     .catch((err) => res.status(404).send(err))
   }
