@@ -11,27 +11,29 @@ let currentServer = 0;
 
 
 app.get('*', (req, res) => {
-  let params = {
-    url: `${servers[currentServer]}${req.url}`,
-    method: 'get',
-    headers: req.headers,
-    data: req.body,
-  }
-  if (currentServer === 1) {
-    axios(params)
-    .then((results) => {
-      currentServer = 0;
-      res.status(200).send(results.data);
-    })
-    .catch((err) => res.status(404).send(err))
-  } else {
-    axios(params)
-    .then((results) => {
-      currentServer = 1;
-      res.status(200).send(results.data);
-    })
-    .catch((err) => res.status(404).send(err))
-  }
+  // let params = {
+  //   url: `${servers[currentServer]}${req.url}`,
+  //   method: 'get',
+  //   headers: req.headers,
+  //   data: req.body,
+  // }
+  // if (currentServer === 1) {
+  //   axios(params)
+  //   .then((results) => {
+  //     currentServer = 0;
+  //     res.status(200).send(results.data);
+  //   })
+  //   .catch((err) => res.status(404).send(err))
+  // } else {
+  //   axios(params)
+  //   .then((results) => {
+  //     currentServer = 1;
+  //     res.status(200).send(results.data);
+  //   })
+  //   .catch((err) => res.status(404).send(err))
+  // }
+  req.pipe(request({url servers[currentServer] + req.url})).pipe(res);
+  cur = (cur + 1) % servers.length;
 
 
 })
