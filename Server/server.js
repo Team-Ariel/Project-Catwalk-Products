@@ -4,6 +4,8 @@ const app = express()
 const port = 3000;
 const db = require('../DB/routes.js')
 const cluster = require('cluster');
+const mcache = require('memory-cache');
+
 
 const numCPUs = require('os').cpus().length;
 
@@ -22,6 +24,24 @@ if (cluster.isMaster) {
     console.log("error in server setup") :
     console.log(`Worker ${process.pid} started`);
   })
+}
+
+const cache = (duration) => {
+  return (req, res, next) => {
+    let key = '_express_' + req.originalUrl || req.url
+    let cachedBody = mcache.get(key)
+    if (cachedBody) {
+      res.send(cachedBody)
+      return;
+    } else {
+      res.sendResponse = res.send
+      res.send = (body) => {
+        mcache.put(key, body, duration * 1000);
+        res.sendResponse(body)
+      }
+      next();
+    }
+  }
 }
 
 
@@ -51,7 +71,7 @@ app.get('/products/:product_id', (req, res) => {
   })
 })
 
-app.get('/products/:product_id/styles', (req, res) => {
+app.get('/products/:product_id/styles', cache(10), (req, res) => {
   controller.getStyles((req.params.product_id), (err, data) => {
     if (err) {
       res.status(err).send(`Error: ${err}`);
