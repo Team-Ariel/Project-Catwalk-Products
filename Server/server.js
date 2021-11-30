@@ -71,7 +71,7 @@ app.get('/products/:product_id', (req, res) => {
   })
 })
 
-app.get('/products/:product_id/styles', cache(10), (req, res) => {
+app.get('/products/:product_id/styles', cache(60), (req, res) => {
   controller.getStyles((req.params.product_id), (err, data) => {
     if (err) {
       res.status(err).send(`Error: ${err}`);
