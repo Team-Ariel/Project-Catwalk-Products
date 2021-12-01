@@ -1,5 +1,4 @@
 const express = require('express');
-const controller = require('./controller.js');
 const app = express()
 const port = 3000;
 const db = require('../DB/routes.js')
@@ -49,44 +48,28 @@ const cache = (duration) => {
 
 
 app.get('/products', cache(60), (req, res) => {
-  controller.getProductsAndFormat(req.query, (err, data) => {
-    if (err) {
-      res.status(err).send(`Error: ${err}`);
-    }
-    if (data) {
-      res.status(200).send(data);
-    }
-
+  db.getProducts(req.query)
+  .then((results) => {
+     res.status(200).send(results.rows);
   })
 })
 
-app.get('/products/:product_id', (req, res) => {
-  controller.getSingleProductAndFeatures(req.params.product_id, (err, data) => {
-    if (err) {
-      res.status(404).send(`Error: ${err}`);
-    }
-    if (data) {
-      res.status(200).send(data);
-    }
-
+app.get('/products/:product_id', cache(60), (req, res) => {
+  db.getProduct(req.params.product_id)
+  .then((results) => {
+    let response = results.rows[0]
+     if (response === undefined) {
+       res.send('No match')
+       return;
+     }
+     res.status(200).send(response);
   })
 })
-
-// app.get('/products/:product_id/styles', cache(60), (req, res) => {
-//   controller.getStyles((req.params.product_id), (err, data) => {
-//     if (err) {
-//       res.status(err).send(`Error: ${err}`);
-//     }
-//     if (data) {
-//       res.status(200).send(data);
-//     }
-//   })
-
-// })
 
 app.get('/products/:product_id/styles', cache(60), (req, res) => {
   db.getStyles(req.params.product_id)
   .then((result) => {
+    result.rows[0].product_id = req.params.product_id
     res.status(200).send(result.rows[0])
   })
   .catch((err) => {
@@ -95,16 +78,16 @@ app.get('/products/:product_id/styles', cache(60), (req, res) => {
 
 })
 
-app.get('/products/:product_id/related', (req, res) => {
-  controller.getRelated((req.params.product_id), (err, data) => {
-    if (err) {
-      res.status(err.send(`Error: ${err}`));
-    }
-    if (data) {
-      res.status(200).send(data);
-    }
+app.get('/products/:product_id/related', cache(60), (req, res) => {
+  db.getRelated(req.params.product_id)
+  .then((results) => {
+    let data = [];
+    result.rows.forEach(related => data.push(related.related_product_id))
+    res.status(200).send(data)
   })
-
+  .catch((err) => {
+    res.status(404).send(`Error: ${err}`)
+  })
 })
 
 app.get('/loaderio-7bf4d5f38ce86532dc53d085672f654b.txt', (req, res) => res.send('loaderio-7bf4d5f38ce86532dc53d085672f654b'))
