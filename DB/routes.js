@@ -10,14 +10,6 @@ const pool = new Pool({
   port: 5432,
 })
 
-// const pool = new Pool({
-//   user: postgresRole,
-//   host: '127.0.0.1',
-//   database: 'sdcoverview',
-//   password: '',
-//   port: 3000,
-// })
-
 
 
 const getProducts = (params) => {
@@ -30,7 +22,6 @@ const getProducts = (params) => {
 }
 
 const getProduct = (productId) => {
-  // return pool.query(`SELECT * FROM myschema.product WHERE id=${productId}`)
   return pool.query(`SELECT a.id, a.name, a.slogan, a.description, a.category, a.default_price, (SELECT json_agg(features) FROM (SELECT b.feature feature, b.value FROM myschema.features b WHERE b.product_id = a.id) features) AS features From myschema.product AS a WHERE id=${productId};`)
 }
 

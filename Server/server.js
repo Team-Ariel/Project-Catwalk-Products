@@ -7,6 +7,7 @@ const cluster = require('cluster');
 const mcache = require('memory-cache');
 
 
+
 const numCPUs = require('os').cpus().length;
 
 if (cluster.isMaster) {
@@ -47,7 +48,7 @@ const cache = (duration) => {
 
 
 
-app.get('/products', (req, res) => {
+app.get('/products', cache(60), (req, res) => {
   controller.getProductsAndFormat(req.query, (err, data) => {
     if (err) {
       res.status(err).send(`Error: ${err}`);
@@ -71,14 +72,25 @@ app.get('/products/:product_id', (req, res) => {
   })
 })
 
+// app.get('/products/:product_id/styles', cache(60), (req, res) => {
+//   controller.getStyles((req.params.product_id), (err, data) => {
+//     if (err) {
+//       res.status(err).send(`Error: ${err}`);
+//     }
+//     if (data) {
+//       res.status(200).send(data);
+//     }
+//   })
+
+// })
+
 app.get('/products/:product_id/styles', cache(60), (req, res) => {
-  controller.getStyles((req.params.product_id), (err, data) => {
-    if (err) {
-      res.status(err).send(`Error: ${err}`);
-    }
-    if (data) {
-      res.status(200).send(data);
-    }
+  db.getStyles(req.params.product_id)
+  .then((result) => {
+    res.status(200).send(result.rows[0])
+  })
+  .catch((err) => {
+    res.status(404).send(`Error: ${err}`)
   })
 
 })
