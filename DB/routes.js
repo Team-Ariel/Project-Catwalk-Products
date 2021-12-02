@@ -1,6 +1,6 @@
 const Pool = require('pg').Pool;
 
-const postgresRole = 'ubuntu';
+const postgresRole = 'jamesplier';
 
 const pool = new Pool({
   user: postgresRole,

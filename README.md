@@ -26,13 +26,13 @@ This repository is the API and database for the product information, Created by 
 
 ## Technologies used
 ---
-  1. Nodejs
-  2. Express
-  3. Postgresql
-  4. Amazon Web Services
-  5. Nginx
-  6. Loader.io
-  7. Jest
+  1. Nodejs: Provides an asynchronous event-driven runtime environment for building scalable network applications
+  2. Express: Javascript module for enabling flexible HTTP routing methods
+  3. Postgresql: A robuts and stable open source database management system
+  4. Amazon Web Services EC2: Amazon's Free elastic Cloud Computing platform
+  5. Nginx: Enables load balancing HTTP traffic between many different servers
+  6. Loader.io: Stress testing application
+  7. Jest:
 
 ## Author Bio
 ---
