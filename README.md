@@ -2,17 +2,17 @@
 
 ### Table of contents:
 ---
-1. [About This Project](##About-This-Project)
-    * [Author Bio](##Author-Bio)
-    * [Technologies used](##Technologies-used)
-2. [Getting Started:](##Getting-Started)
-    - [Prerequisites](###Prerequisites)
-    - [Installation](##Installation:)
+1. [About This Project](#About-This-Project)
+    * [Author Bio](#Author-Bio)
+    * [Technologies used](#Technologies-used)
+2. [Getting Started:](#Getting-Started)
+    - [Prerequisites](#Prerequisites)
+    - [Installation](#Installation:)
 3. [API Guide:](#API-Guide)
-    - [GET /products](##Endpoints:)
-    - [GET /products/:product_id](##Endpoints:)
-    - [GET /products/:product_id/styles](##Endpoints:)
-    - [GET /products/:product_id/related](##Endpoints:)
+    - [GET /products](#Endpoints:)
+    - [GET /products/:product_id](#Endpoints:)
+    - [GET /products/:product_id/styles](#Endpoints:)
+    - [GET /products/:product_id/related](#Endpoints:)
 4. [Testing Guide](#Testing-Guide:)
 ---
 ## About This Project
