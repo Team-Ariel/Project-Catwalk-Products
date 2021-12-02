@@ -18,7 +18,7 @@
 ## About This Project
 ---
 
-Project catwalk is a complete remodeling of the backender server and database for a clothing outlet website. Our team was tasked with setting up multiple API endpoints allowing traffic up to 1000 requests per second with a latency of under 200ms per request. Using horizontally scaling architecture to construct our server system and database combined with Amazon Web Services EC2 cloud computing we created a flexible efficient system to access product data.
+Project Catwalk is a complete remodeling of the backend server and database for a clothing outlet website. Our team was tasked with setting up multiple API endpoints allowing traffic up to 1000 requests per second with a latency of under 200ms per request. Using horizontally scaling architecture to construct our server system and database combined with Amazon Web Services EC2 cloud computing we created a flexible efficient system to access product data.
 
 This repository is the API and database for the product information, Created by James Plier. https://github.com/Jplier
 
