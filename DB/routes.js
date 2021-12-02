@@ -4,9 +4,9 @@ const postgresRole = 'ubuntu';
 
 const pool = new Pool({
   user: postgresRole,
-  host: '3.145.76.22',
+  host: 'localhost',
   database: 'sdcoverview',
-  password: 'ubuntu',
+  password: '',
   port: 5432,
 })
 
