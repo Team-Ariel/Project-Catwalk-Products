@@ -7,13 +7,13 @@
     * [Technologies used](#Technologies-used)
 2. [Getting Started:](#Getting-Started)
     - [Prerequisites](#Prerequisites)
-    - [Installation](#Installation:)
+    - [Installation](#Installation)
 3. [API Guide:](#API-Guide)
-    - [GET /products](#Endpoints:)
-    - [GET /products/:product_id](#Endpoints:)
-    - [GET /products/:product_id/styles](#Endpoints:)
-    - [GET /products/:product_id/related](#Endpoints:)
-4. [Testing Guide](#Testing-Guide:)
+    - [GET /products](#Endpoints)
+    - [GET /products/:product_id](#Endpoints)
+    - [GET /products/:product_id/styles](#Endpoints)
+    - [GET /products/:product_id/related](#Endpoints)
+4. [Testing Guide](#Testing-Guide)
 ---
 ## About This Project
 ---
@@ -40,7 +40,7 @@ This is the capstone project of James Plier during his time at Hack Reactor soft
 
 ## Getting Started
 ---
-### Prerequesites
+### Prerequisites
 ---
     * Nodejs
     * Git
